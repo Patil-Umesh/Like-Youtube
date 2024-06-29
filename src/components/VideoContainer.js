@@ -1,5 +1,5 @@
 import React from "react";
-import VideoCard from "./VideoCard";
+import VideoCard, { LiveVideoCard } from "./VideoCard";
 import useGetPopularVids from "../hooks/useGetPopularVids";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -10,11 +10,20 @@ const VideoContainer = () => {
 
   return popularVids ? (
     <div className="flex flex-wrap py-5">
-      {popularVids.map((video) => (
-        <Link key={video.id} to={"/watch?v=" + video.id}>
-          <VideoCard key={video?.id} info={video} />
+      {popularVids && (
+        <Link to={"/live?v=" + popularVids[0].id}>
+          <LiveVideoCard info={popularVids[0]} />
         </Link>
-      ))}
+      )}
+      {popularVids.map((video) =>
+        popularVids[0].id === video.id ? (
+          ""
+        ) : (
+          <Link key={video.id} to={"/watch?v=" + video.id}>
+            <VideoCard key={video?.id} info={video} />
+          </Link>
+        )
+      )}
     </div>
   ) : null;
 };

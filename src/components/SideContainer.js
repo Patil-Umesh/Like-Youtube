@@ -1,11 +1,31 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { addVideoComments, addVideoInfo } from "../utils/appSlice";
+import { addSearchResults } from "../utils/searchResultSlice";
 
 const SideContainer = () => {
+  const isMenuOpen = useSelector((store) => store.app?.isMenuOpen);
+  const videoInfo = useSelector((store) => store.app?.videoInfo);
+  const dispatch = useDispatch();
+
+  const clearVidInfo = () => {
+    dispatch(addVideoInfo(null));
+    dispatch(addVideoComments(null));
+    dispatch(addSearchResults(null));
+  };
+
   return (
-    <div className="col-span-2 py-5 hover:overflow-y-scroll h-[630px]">
+    <div
+      className={`${
+        isMenuOpen && videoInfo
+          ? "absolute bg-white z-50 col-span-2 py-5 h-auto"
+          : "col-span-2 py-5 hover:overflow-y-scroll h-[630px]"
+      }`}
+    >
       <Link to="/">
         <div
+          onClick={clearVidInfo}
           title="Home"
           className="flex justify-start mx-2 mt-2 items-center content-center cursor-pointer bg-gray-100 rounded-lg"
         >

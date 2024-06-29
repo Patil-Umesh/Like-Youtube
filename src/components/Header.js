@@ -1,9 +1,63 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
+import {
+  API_KEY,
+  SEARCH_RESULTS_API,
+  YOUTUBE_AUTOCOMPLETE_API,
+} from "../utils/constants";
+import { addSearchCache } from "../utils/searchSlice";
+import { addSearchResults } from "../utils/searchResultSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const searchCache = useSelector((store) => store.search);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchCache[searchQuery]) {
+        setSuggestions(searchCache[searchQuery]);
+      } else {
+        getSearchSuggestions();
+      }
+    }, 200);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchQuery]);
+
+  const getSearchSuggestions = async () => {
+    const data = await fetch(YOUTUBE_AUTOCOMPLETE_API + searchQuery);
+    // console.log("API Call " + searchQuery);
+    const json = await data.json();
+    setSuggestions(json[1]);
+    // console.log(json[1]);
+    dispatch(
+      addSearchCache({
+        [searchQuery]: json[1],
+      })
+    );
+  };
+  const clickedSearchResult = (s, i) => {
+    // console.log(s + " - " + i);
+    const getSearchResults = async () => {
+      const data = await fetch(
+        SEARCH_RESULTS_API + searchQuery + "&key=" + API_KEY
+      );
+      const json = await data.json();
+      // console.log(json.items);
+      dispatch(addSearchResults(json.items));
+    };
+    getSearchResults();
+  };
+  // useEffect(()=>{
+
+  // },[])
   return (
     <>
       <div className="grid grid-cols-12 justify-evenly p-[0.5rem] shadow-lg">
@@ -27,19 +81,46 @@ const Header = () => {
         </div>
         <div className="col-span-8 flex justify-center items-center text-center">
           <input
-            className="border border-gray-300 outline-none ps-3 rounded-l-full w-[600px] h-[2.8rem]"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setShowSuggestions(true)}
+            // onBlur={() => setShowSuggestions(false)}
+            className="border border-gray-300 outline-[#9eb6f8] outline-[0.5px] ps-3 rounded-l-full w-[600px] h-[2.8rem]"
             type="text"
             placeholder="Search"
           />
           <div className="flex items-center text-center border border-gray-300 rounded-r-full h-[2.8rem] hover:bg-gray-100">
-            <img
-              title="Search"
-              className="w-12  px-2 cursor-pointer"
-              alt="Search"
-              src="https://cdn-icons-png.flaticon.com/128/14071/14071320.png"
-            />
-            <button></button>
+            <button>
+              <img
+                title="Search"
+                className="w-12  px-2 cursor-pointer"
+                alt="Search"
+                src="https://cdn-icons-png.flaticon.com/128/14071/14071320.png"
+              />
+            </button>
           </div>
+          {showSuggestions && suggestions.length !== 0 ? (
+            <div className="absolute w-[600px] top-[60px] left-[435px] bg-white rounded-lg border-y border-x border-gray-300 shadow-md">
+              <ul className="py-2 text-left">
+                {suggestions.map((s, i) => (
+                  <li
+                    onClick={() => {
+                      setSearchQuery(s);
+                      clickedSearchResult(s, i);
+                      setShowSuggestions(false);
+                    }}
+                    key={s}
+                    className="my-1 p-1 hover:bg-gray-100"
+                  >
+                    <span className="mx-2">🔍</span>
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <div className="col-span-2 flex justify-end items-center text-center">
           <img

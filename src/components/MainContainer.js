@@ -2,9 +2,15 @@ import React from "react";
 import ButtonList from "./ButtonList";
 import VideoContainer from "./VideoContainer";
 import { useSelector } from "react-redux";
+import SearchResultPage from "./SearchResultPage";
 
 const MainContainer = () => {
   const isMenuOpen = useSelector((store) => store.app?.isMenuOpen);
+  const searchResults = useSelector(
+    (store) => store.searchResult?.searchResult
+  );
+  // console.log(searchResults);
+
   return (
     <div
       className={` ${
@@ -12,7 +18,8 @@ const MainContainer = () => {
       }`}
     >
       <ButtonList />
-      <VideoContainer />
+      {!searchResults && <VideoContainer />}
+      {searchResults && <SearchResultPage />}
     </div>
   );
 };

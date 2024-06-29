@@ -1,25 +1,19 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link, useSearchParams } from "react-router-dom";
 import { Collapse, Ripple, initTWE } from "tw-elements";
-import CommentsContainer from "./CommentsContainer";
-import { getDiffInDays, getLikeCount } from "../utils/helper";
 import PopularVids from "./PopularVids";
+import { Link } from "react-router-dom";
+import { getDiffInDays } from "../utils/helper";
+import CommentsContainer from "./CommentsContainer";
 
-const WatchPage = () => {
+const SearchedVidPlay = () => {
   const popularVideos = useSelector((store) => store.app?.popularVideos);
-  const [searchParams] = useSearchParams();
-
   const isMenuOpen = useSelector((store) => store.app?.isMenuOpen);
   const videoInfo = useSelector((store) => store.app?.videoInfo);
-
   const snippet = useSelector((store) => store.app?.videoInfo?.snippet);
-  const vidId = useSelector((store) => store.app?.videoInfo?.id);
-  const statistics = useSelector((store) => store.app?.videoInfo?.statistics);
+  const vidId = useSelector((store) => store.app?.videoInfo?.id?.videoId);
   const { publishedAt, title, description, channelTitle } = snippet ?? {};
-  const { viewCount, likeCount, commentCount } = statistics ?? {};
 
-  const likeCnt = getLikeCount(likeCount);
   const publish = getDiffInDays(publishedAt);
 
   useEffect(() => {
@@ -41,7 +35,7 @@ const WatchPage = () => {
             className="aspect-video w-full rounded-2xl"
             src={
               "https://www.youtube.com/embed/" +
-              searchParams.get("v") +
+              vidId +
               "?rel=0&autoplay=1&mute=1"
             }
             title="YouTube video player"
@@ -78,7 +72,7 @@ const WatchPage = () => {
                     alt="Like"
                     src="https://cdn-icons-png.flaticon.com/128/1000/1000621.png"
                   />
-                  {likeCnt}
+                  {0}
                 </button>
                 <button
                   title="I dislike this"
@@ -123,7 +117,7 @@ const WatchPage = () => {
             </div>
             <div className="bg-gray-100 rounded-lg px-2 py-2 mt-4 mb-5">
               <div className="flex font-bold">
-                <h6 className="px-1">{viewCount} views</h6>
+                <h6 className="px-1">{10000} views</h6>
                 <h6 className="px-1">{publish} </h6>
               </div>
               <div
@@ -148,7 +142,7 @@ const WatchPage = () => {
             </div>
             <div className="my-1 py-1">
               <h1 className="px-1 pt-2 mb-3 font-bold text-xl">
-                {commentCount} Comments
+                {4561} Comments
               </h1>
               <div className="px-1">
                 <CommentsContainer id={vidId} />
@@ -173,4 +167,4 @@ const WatchPage = () => {
   );
 };
 
-export default WatchPage;
+export default SearchedVidPlay;

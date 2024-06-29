@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Collapse, Ripple, initTWE } from "tw-elements";
 import CommentsContainer from "./CommentsContainer";
 import { getDiffInDays, getLikeCount } from "../utils/helper";
-import PopularVids from "./PopularVids";
+import LiveChat from "./LiveChat";
 
-const WatchPage = () => {
-  const popularVideos = useSelector((store) => store.app?.popularVideos);
+const LivePage = () => {
   const [searchParams] = useSearchParams();
 
   const isMenuOpen = useSelector((store) => store.app?.isMenuOpen);
@@ -157,20 +156,14 @@ const WatchPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col w-full pt-7">
-          {popularVideos?.map((video, index) =>
-            vidId === video.id ? (
-              ""
-            ) : (
-              <Link key={index} to={"/watch?v=" + video.id}>
-                <PopularVids video={video} />
-              </Link>
-            )
-          )}
+        <div className="flex flex-col w-full pt-[1.27rem]">
+          <div className="flex flex-col w-4/5 h-[580px] my-2 col-span-4 mx-auto">
+            <LiveChat />
+          </div>
         </div>
       </div>
     )
   );
 };
 
-export default WatchPage;
+export default LivePage;

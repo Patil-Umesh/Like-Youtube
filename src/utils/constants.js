@@ -18,3 +18,11 @@ export const buttonList = [
   "Game shows",
   "Recently uploaded",
 ];
+export const LIVE_TAG =
+  "https://cdn-icons-png.flaticon.com/128/5822/5822037.png";
+
+export const YOUTUBE_AUTOCOMPLETE_API =
+  "https://thingproxy.freeboard.io/fetch/http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
+
+export const SEARCH_RESULTS_API =
+  "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q=";

@@ -1,36 +1,19 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { addVideoInfo, toggleMenu } from "../utils/appSlice";
+import { getDiffInDays, getViewCount } from "../utils/helper";
+import { LIVE_TAG } from "../utils/constants";
 
-const VideoCard = ({ info }) => {
+const VideoCard = ({ info, live }) => {
   const dispatch = useDispatch();
-  // console.log(info);
+
   const { snippet, statistics } = info ?? {};
   const { title, channelTitle, thumbnails, publishedAt } = snippet ?? {};
   const { viewCount } = statistics ?? {};
 
-  let views;
-  if (viewCount < 1000) {
-    views = viewCount;
-  } else if (viewCount >= 1000000) {
-    views = Math.round(viewCount / 1000000) + "M";
-  } else if (viewCount >= 1000) {
-    views = Math.round(viewCount / 1000) + "K";
-  }
+  const views = getViewCount(viewCount);
+  const publish = getDiffInDays(publishedAt);
 
-  let date1 = new Date(publishedAt);
-  let date2 = new Date();
-  let diffInTime = date2.getTime() - date1.getTime();
-  let diffInDays = Math.round(diffInTime / (1000 * 3600 * 24));
-  // console.log(diffInDays);
-  let publish;
-  if (diffInDays === 0) {
-    publish = "Few hours ago";
-  } else if (diffInDays === 1) {
-    publish = `${diffInDays} day ago`;
-  } else if (diffInDays > 1) {
-    publish = `${diffInDays} days ago`;
-  }
   const navigateToWatch = () => {
     dispatch(addVideoInfo(info));
     dispatch(toggleMenu());
@@ -58,6 +41,9 @@ const VideoCard = ({ info }) => {
             <h6 className="px-1 text-gray-700">{views} views</h6>
             <div className="font-bold mx-1">.</div>
             <h6 className="px-1 text-gray-700">{publish} </h6>
+            {live && (
+              <img alt="LIVE" className="ml-[100px] w-14 h-12" src={live} />
+            )}
           </div>
         </div>
       </div>
@@ -65,4 +51,11 @@ const VideoCard = ({ info }) => {
   );
 };
 
+export const LiveVideoCard = ({ info }) => {
+  return (
+    <div className="shadow-md">
+      <VideoCard live={LIVE_TAG} info={info} />
+    </div>
+  );
+};
 export default VideoCard;
