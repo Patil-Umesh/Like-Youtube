@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 // import useGetVideoComments from "../hooks/useGetVideoComments";
 import { useSelector } from "react-redux";
 import Comments from "./Comments";
-import { API_KEY } from "../utils/constants";
+// import { API_KEY } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addVideoComments } from "../utils/appSlice";
 
@@ -14,7 +14,7 @@ const CommentsContainer = ({ id }) => {
       "https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=" +
         id +
         "&maxResults=100&key=" +
-        API_KEY
+        process.env.REACT_APP_API_KEY
     );
     const data = await response.json();
     // console.log(data?.items);

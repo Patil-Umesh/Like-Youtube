@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import {
-  API_KEY,
+  // API_KEY,
   SEARCH_RESULTS_API,
   YOUTUBE_AUTOCOMPLETE_API,
 } from "../utils/constants";
@@ -47,7 +47,10 @@ const Header = () => {
     // console.log(s + " - " + i);
     const getSearchResults = async () => {
       const data = await fetch(
-        SEARCH_RESULTS_API + searchQuery + "&key=" + API_KEY
+        SEARCH_RESULTS_API +
+          searchQuery +
+          "&key=" +
+          process.env.REACT_APP_API_KEY
       );
       const json = await data.json();
       // console.log(json.items);
