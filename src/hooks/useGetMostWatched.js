@@ -8,7 +8,7 @@ const useGetMostWatched = () => {
   const getMostWatchedVids = async () => {
     const response = await fetch(MOST_WATCHED);
     const data = await response.json();
-    console.log(data.items);
+    // console.log(data.items);
     dispatch(addMostWatchedVids(data.items));
   };
 

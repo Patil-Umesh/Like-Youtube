@@ -8,7 +8,7 @@ const LiveChat = () => {
   const [chatMessage, setChatMessage] = useState("");
   const dispatch = useDispatch();
   const chatMessages = useSelector((store) => store.chat?.messages);
-  console.log(chatMessages);
+  // console.log(chatMessages);
   useEffect(() => {
     const timer = setInterval(() => {
       // console.log("Polling data");

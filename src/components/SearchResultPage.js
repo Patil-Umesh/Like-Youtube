@@ -10,7 +10,7 @@ const SearchResultPage = () => {
   const searchResults = useSelector(
     (store) => store.searchResult?.searchResult
   );
-  console.log(searchResults);
+  // console.log(searchResults);
   const navigateToPlay = (result) => {
     dispatch(addVideoInfo(result));
     dispatch(toggleMenu());
